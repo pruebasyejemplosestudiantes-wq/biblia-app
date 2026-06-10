@@ -3,14 +3,18 @@ import { useState, useEffect } from 'react'
 const KEY = 'bible_study'
 
 const def = {
-  bookmarks: [],      // [{ book, chapter, verse, ref, text }]
-  highlights: [],     // [{ book, chapter, verse, ref, text, color }]
-  notes: [],          // [{ id, ref, text, note, date }]
-  planProgress: {},   // { planId: { completedDays: [] } }
+  bookmarks:    [],   // [{ book, chapter, verse, ref, text }]
+  highlights:   [],   // [{ book, chapter, verse, ref, text, color }]
+  notes:        [],   // [{ id, ref, text, note, date, topicId? }]  ← verse notes from Bible
+  journalNotes: [],   // [{ id, title, content, date, topicId? }]   ← free notes from Library
+  topics:       [],   // [{ id, name, color }]
+  planProgress: {},
   streak: 0,
   lastActiveDate: null,
-  readChapters: [],   // ['genesis-1', 'john-3', ...]
+  readChapters: [],
 }
+
+const TOPIC_COLORS = ['#B5566A','#7B5EA7','#C08B45','#4A9B7A','#5B8EC4','#C47C3A']
 
 export function useStudy() {
   const [study, setStudy] = useState(() => {
@@ -20,6 +24,7 @@ export function useStudy() {
 
   useEffect(() => { localStorage.setItem(KEY, JSON.stringify(study)) }, [study])
 
+  /* ── Verse actions (Bible reader) ── */
   function toggleBookmark(item) {
     setStudy(s => {
       const exists = s.bookmarks.find(b => b.ref === item.ref)
@@ -48,6 +53,50 @@ export function useStudy() {
     setStudy(s => ({ ...s, notes: s.notes.filter(n => n.ref !== ref) }))
   }
 
+  /* ── Journal notes (Library) ── */
+  function saveJournalNote(title, content, topicId = '') {
+    setStudy(s => ({
+      ...s,
+      journalNotes: [
+        { id: Date.now(), title: title.trim() || 'Untitled', content, topicId, date: new Date().toLocaleDateString() },
+        ...(s.journalNotes || []),
+      ],
+    }))
+  }
+
+  function updateJournalNote(id, title, content, topicId) {
+    setStudy(s => ({
+      ...s,
+      journalNotes: (s.journalNotes || []).map(n =>
+        n.id === id ? { ...n, title: title.trim() || 'Untitled', content, topicId } : n
+      ),
+    }))
+  }
+
+  function deleteJournalNote(id) {
+    setStudy(s => ({ ...s, journalNotes: (s.journalNotes || []).filter(n => n.id !== id) }))
+  }
+
+  /* ── Topics ── */
+  function saveTopic(name) {
+    const usedColors = study.topics.map(t => t.color)
+    const color = TOPIC_COLORS.find(c => !usedColors.includes(c)) || TOPIC_COLORS[(study.topics || []).length % TOPIC_COLORS.length]
+    setStudy(s => ({
+      ...s,
+      topics: [...(s.topics || []), { id: Date.now(), name: name.trim(), color }],
+    }))
+  }
+
+  function deleteTopic(id) {
+    setStudy(s => ({
+      ...s,
+      topics: (s.topics || []).filter(t => t.id !== id),
+      journalNotes: (s.journalNotes || []).map(n => n.topicId === id ? { ...n, topicId: '' } : n),
+      notes: s.notes.map(n => n.topicId === id ? { ...n, topicId: '' } : n),
+    }))
+  }
+
+  /* ── Reading progress ── */
   function markDayComplete(planId, day) {
     setStudy(s => {
       const prev = s.planProgress[planId] || { completedDays: [] }
@@ -79,5 +128,12 @@ export function useStudy() {
   function isHighlighted(ref) { return study.highlights.find(h => h.ref === ref) }
   function getNote(ref) { return study.notes.find(n => n.ref === ref) }
 
-  return { study, toggleBookmark, toggleHighlight, saveNote, deleteNote, markDayComplete, markChapterRead, isBookmarked, isHighlighted, getNote }
+  return {
+    study,
+    toggleBookmark, toggleHighlight, saveNote, deleteNote,
+    saveJournalNote, updateJournalNote, deleteJournalNote,
+    saveTopic, deleteTopic,
+    markDayComplete, markChapterRead,
+    isBookmarked, isHighlighted, getNote,
+  }
 }

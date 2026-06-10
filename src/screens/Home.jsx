@@ -14,7 +14,7 @@ export default function Home({ study, onNavigate }) {
   return (
     <div style={{ padding: '0 0 90px', animation: 'fadeIn 0.4s ease' }}>
       {/* Header */}
-      <div style={{
+      <div className="screen-header" style={{
         padding: '52px 24px 28px',
         background: 'linear-gradient(160deg, #F9EDE8 0%, #F5E8F0 100%)',
         borderBottom: '1px solid var(--border)',
@@ -99,7 +99,7 @@ export default function Home({ study, onNavigate }) {
         <p style={{ fontSize:'0.7rem', fontWeight:700, letterSpacing:'2px', textTransform:'uppercase', color:'var(--text-muted)', marginBottom:'12px' }}>
           QUICK ACCESS
         </p>
-        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'10px' }}>
+        <div className="grid-quick" style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'10px' }}>
           {[
             { icon:'📖', label:'Read Bible',     sub:'KJV · All 66 books',          screen:'bible',  color:'#B5566A' },
             { icon:'📋', label:'Reading Plans',  sub:'3 plans available',            screen:'plans',  color:'#7B5EA7' },

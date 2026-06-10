@@ -17,9 +17,13 @@ const NAV = [
 export default function App() {
   const [screen, setScreen] = useState('home')
   const studyHook = useStudy()
-  const { study, toggleBookmark, toggleHighlight, saveNote, deleteNote, markDayComplete, markChapterRead, isBookmarked, isHighlighted, getNote } = studyHook
+  const {
+    study, toggleBookmark, toggleHighlight, saveNote, deleteNote,
+    saveJournalNote, updateJournalNote, deleteJournalNote,
+    saveTopic, deleteTopic,
+    markDayComplete, markChapterRead, isBookmarked, isHighlighted, getNote,
+  } = studyHook
 
-  // Expose methods via study object so Bible can call them directly
   const studyWithMethods = {
     ...study,
     toggleBookmark, toggleHighlight, saveNote, deleteNote,
@@ -27,17 +31,49 @@ export default function App() {
   }
 
   return (
-    <div style={{ minHeight:'100vh', background:'var(--bg)' }}>
-      <div style={{ paddingBottom:'72px' }}>
+    <div className="app-shell">
+
+      {/* ── Sidebar nav (desktop only) ── */}
+      <nav className="app-nav-side">
+        <div style={{ paddingBottom:'20px', marginBottom:'8px', borderBottom:'1px solid var(--border)' }}>
+          <div style={{ fontFamily:'var(--font-serif)', fontSize:'1.15rem', fontWeight:600, color:'var(--text)', lineHeight:1.2 }}>
+            📖 Holy Bible
+          </div>
+          <div style={{ fontSize:'0.72rem', color:'var(--text-muted)', marginTop:'3px' }}>King James Version</div>
+        </div>
+
+        {NAV.map(item => (
+          <button
+            key={item.id}
+            onClick={() => setScreen(item.id)}
+            className={`nav-side-item${screen === item.id ? ' active' : ''}`}
+          >
+            <span style={{ fontSize:'1.1rem' }}>{item.icon}</span>
+            <span>{item.label}</span>
+          </button>
+        ))}
+      </nav>
+
+      {/* ── Main content ── */}
+      <div className="app-content">
         {screen === 'home'    && <Home    study={studyWithMethods} onNavigate={setScreen} />}
         {screen === 'bible'   && <Bible   study={studyWithMethods} onToggleBookmark={toggleBookmark} onToggleHighlight={toggleHighlight} onSaveNote={saveNote} onMarkRead={markChapterRead} />}
         {screen === 'plans'   && <Plans   study={studyWithMethods} onMarkDay={markDayComplete} />}
-        {screen === 'library' && <Library study={studyWithMethods} onDeleteNote={deleteNote} onToggleBookmark={toggleBookmark} />}
+        {screen === 'library' && <Library
+          study={studyWithMethods}
+          onDeleteNote={deleteNote}
+          onToggleBookmark={toggleBookmark}
+          onSaveJournalNote={saveJournalNote}
+          onUpdateJournalNote={updateJournalNote}
+          onDeleteJournalNote={deleteJournalNote}
+          onSaveTopic={saveTopic}
+          onDeleteTopic={deleteTopic}
+        />}
         {screen === 'quiz'    && <Quiz />}
       </div>
 
-      {/* Bottom navigation */}
-      <nav style={{
+      {/* ── Bottom nav (mobile only) ── */}
+      <nav className="app-nav-bottom" style={{
         position:'fixed', bottom:0, left:'50%', transform:'translateX(-50%)',
         width:'100%', maxWidth:'430px',
         background:'rgba(253,246,238,0.97)', backdropFilter:'blur(16px)',
@@ -61,6 +97,7 @@ export default function App() {
           </button>
         ))}
       </nav>
+
     </div>
   )
 }

@@ -48,7 +48,7 @@ export default function Bible({ study, onToggleBookmark, onToggleHighlight, onSa
   return (
     <div style={{ minHeight:'100vh', display:'flex', flexDirection:'column', background:'var(--bg)', paddingBottom:'90px' }}>
       {/* Top bar */}
-      <div style={{ padding:'52px 20px 16px', borderBottom:'1px solid var(--border)', background:'var(--bg-card)', position:'sticky', top:0, zIndex:50 }}>
+      <div className="screen-header" style={{ padding:'52px 20px 16px', borderBottom:'1px solid var(--border)', background:'var(--bg-card)', position:'sticky', top:0, zIndex:50 }}>
         <div style={{ display:'flex', alignItems:'center', gap:'12px' }}>
           {view !== 'books' && (
             <button onClick={goBack} style={{ width:36, height:36, borderRadius:'50%', background:'var(--bg)', border:'1px solid var(--border)', color:'var(--text)', fontSize:'1rem', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>←</button>
@@ -84,7 +84,7 @@ export default function Bible({ study, onToggleBookmark, onToggleHighlight, onSa
               }}>{t === 'OT' ? 'Old Testament' : 'New Testament'}</button>
             ))}
           </div>
-          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'8px' }}>
+          <div className="grid-books" style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'8px' }}>
             {(testament === 'OT' ? otBooks : ntBooks).map(book => {
               const readCount = Array.from({length:book.chapters}, (_,i) => i+1).filter(ch => study.readChapters.includes(`${book.id}-${ch}`)).length
               return (
@@ -114,7 +114,7 @@ export default function Bible({ study, onToggleBookmark, onToggleHighlight, onSa
       {view === 'chapters' && selectedBook && (
         <div style={{ padding:'20px', animation:'fadeIn 0.3s ease' }}>
           <p style={{ fontSize:'0.78rem', color:'var(--text-muted)', marginBottom:'16px' }}>{selectedBook.chapters} chapters</p>
-          <div style={{ display:'grid', gridTemplateColumns:'repeat(5, 1fr)', gap:'8px' }}>
+          <div className="grid-chapters" style={{ display:'grid', gridTemplateColumns:'repeat(5, 1fr)', gap:'8px' }}>
             {Array.from({length:selectedBook.chapters}, (_,i) => i+1).map(ch => {
               const read = study.readChapters.includes(`${selectedBook.id}-${ch}`)
               return (
@@ -136,6 +136,15 @@ export default function Bible({ study, onToggleBookmark, onToggleHighlight, onSa
       {/* Chapter reader */}
       {view === 'reader' && (
         <div style={{ padding:'24px 20px', animation:'fadeIn 0.3s ease', flex:1 }}>
+          {/* Save hint */}
+          {!loading && (
+            <div style={{ display:'flex', alignItems:'center', gap:'8px', padding:'9px 14px', borderRadius:'12px', background:'var(--rose-dim)', border:'1px solid rgba(181,86,106,0.15)', marginBottom:'20px' }}>
+              <span style={{ fontSize:'0.8rem' }}>💡</span>
+              <p style={{ fontSize:'0.78rem', color:'var(--rose)', lineHeight:1.4 }}>
+                <strong>Tap any verse</strong> to bookmark it, highlight it, or add a personal note.
+              </p>
+            </div>
+          )}
           {loading && (
             <div style={{ textAlign:'center', padding:'60px 0' }}>
               <div style={{ width:32, height:32, borderRadius:'50%', border:'3px solid var(--border)', borderTopColor:'var(--rose)', animation:'spin 0.8s linear infinite', margin:'0 auto 16px' }} />

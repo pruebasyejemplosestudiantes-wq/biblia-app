@@ -14,7 +14,7 @@ export default function Plans({ study, onMarkDay }) {
     return (
       <div style={{ minHeight:'100vh', background:'var(--bg)', paddingBottom:'90px', animation:'fadeIn 0.3s ease' }}>
         {/* Header */}
-        <div style={{ padding:'52px 20px 20px', background:'var(--bg-card)', borderBottom:'1px solid var(--border)' }}>
+        <div className="screen-header" style={{ padding:'52px 20px 20px', background:'var(--bg-card)', borderBottom:'1px solid var(--border)' }}>
           <button onClick={() => setSelected(null)} style={{ display:'flex', alignItems:'center', gap:'6px', color:'var(--text-muted)', fontSize:'0.85rem', cursor:'pointer', marginBottom:'12px' }}>
             ← Back to plans
           </button>
@@ -77,7 +77,7 @@ export default function Plans({ study, onMarkDay }) {
   }
 
   return (
-    <div style={{ padding:'52px 20px 90px', animation:'fadeIn 0.3s ease' }}>
+    <div className="screen-header" style={{ padding:'52px 20px 90px', animation:'fadeIn 0.3s ease' }}>
       <h1 style={{ fontFamily:'var(--font-serif)', fontSize:'1.8rem', fontWeight:600, color:'var(--text)', marginBottom:'4px' }}>Reading Plans</h1>
       <p style={{ fontSize:'0.85rem', color:'var(--text-muted)', marginBottom:'24px' }}>Structured paths through scripture</p>
 

@@ -87,7 +87,7 @@ export default function Quiz() {
         <div style={{ height:'100%', background:'var(--rose)', width:`${progress}%`, transition:'width 0.3s' }} />
       </div>
 
-      <div style={{ padding:'24px 20px 90px', flex:1, display:'flex', flexDirection:'column', maxWidth:420, margin:'0 auto', width:'100%' }}>
+      <div style={{ padding:'24px 20px 90px', flex:1, display:'flex', flexDirection:'column', maxWidth:560, margin:'0 auto', width:'100%' }}>
         <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'28px' }}>
           <span style={{ fontSize:'0.8rem', fontWeight:600, color:'var(--text-muted)' }}>Question {qIdx+1} of {questions.length}</span>
           <span style={{ padding:'4px 12px', borderRadius:'100px', background:'var(--rose-dim)', color:'var(--rose)', fontSize:'0.8rem', fontWeight:600 }}>Score: {score}</span>
