@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 const AUTH_KEY   = 'bible_auth'
 const OTP_KEY    = 'bible_otp'
-const WORKER_URL = 'https://biblia-auth.pruebasyejemplosestudiantes-wq.workers.dev'
+const WORKER_URL = 'https://biblia-auth.biblia-app.workers.dev'
 
 export function useAuth() {
   const [auth, setAuth] = useState(() => {
