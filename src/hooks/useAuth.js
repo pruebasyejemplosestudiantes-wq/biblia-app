@@ -2,8 +2,7 @@ import { useState } from 'react'
 
 const AUTH_KEY   = 'bible_auth'
 const OTP_KEY    = 'bible_otp'
-const RESEND_URL = 'https://api.resend.com/emails'
-const RESEND_KEY = 're_Hdc5CW3Z_BUKxJNYBqMFMGrhBuxnbt195'
+const WORKER_URL = 'https://biblia-auth.pruebasyejemplosestudiantes-wq.workers.dev'
 
 export function useAuth() {
   const [auth, setAuth] = useState(() => {
@@ -19,28 +18,10 @@ export function useAuth() {
     const code = Math.floor(100000 + Math.random() * 900000).toString()
 
     try {
-      const res = await fetch(RESEND_URL, {
+      const res = await fetch(WORKER_URL, {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${RESEND_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          from: 'Holy Bible <onboarding@resend.dev>',
-          to: [email],
-          subject: 'Your Holy Bible login code',
-          html: `
-            <div style="font-family:Georgia,serif;max-width:480px;margin:0 auto;padding:32px 24px;background:#FDF6EE;border-radius:16px;">
-              <p style="font-size:0.75rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B5566A;margin-bottom:6px;">HOLY BIBLE · KJV</p>
-              <h1 style="font-size:1.6rem;color:#2D1B0E;margin-bottom:4px;">Your login code 📖</h1>
-              <p style="color:#8A7265;margin-bottom:28px;font-size:0.9rem;">Enter this code in the app to sign in.</p>
-              <div style="display:flex;justify-content:center;gap:10px;margin-bottom:28px;">
-                ${code.split('').map(d => `<span style="display:inline-block;width:48px;height:60px;line-height:60px;text-align:center;font-size:1.8rem;font-weight:700;color:#B5566A;background:#fff;border-radius:12px;border:2px solid #F5E6EA;">${d}</span>`).join('')}
-              </div>
-              <p style="color:#8A7265;font-size:0.8rem;text-align:center;">Expires in 10 minutes. If you didn't request this, ignore this email.</p>
-            </div>
-          `,
-        }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, code }),
       })
 
       if (!res.ok) {
