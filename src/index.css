@@ -1,0 +1,44 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:        #FDF6EE;
+  --bg-card:   #FFFFFF;
+  --bg-elevated: #F9F1E8;
+  --rose:      #B5566A;
+  --rose-dim:  rgba(181,86,106,0.10);
+  --rose-soft: #F5E6EA;
+  --gold:      #C08B45;
+  --gold-dim:  rgba(192,139,69,0.12);
+  --purple:    #7B5EA7;
+  --purple-dim:rgba(123,94,167,0.10);
+  --text:      #2D1B0E;
+  --text-muted:#8A7265;
+  --border:    rgba(45,27,14,0.10);
+  --radius:    16px;
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-sans:  'DM Sans', system-ui, sans-serif;
+  --max-w:     430px;
+}
+
+html, body { height: 100%; background: var(--bg); }
+body { font-family: var(--font-sans); color: var(--text); -webkit-font-smoothing: antialiased; }
+
+@keyframes fadeUp  { from { opacity:0; transform:translateY(20px) } to { opacity:1; transform:translateY(0) } }
+@keyframes fadeIn  { from { opacity:0 } to { opacity:1 } }
+@keyframes spin    { to { transform: rotate(360deg) } }
+
+button { cursor:pointer; font-family:var(--font-sans); border:none; outline:none; background:none; }
+a { text-decoration:none; color:inherit; }
+input, textarea { font-family:var(--font-sans); }
+
+/* phone-frame centered on desktop */
+#root {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  min-height: 100vh;
+  background: var(--bg);
+  position: relative;
+  box-shadow: 0 0 60px rgba(0,0,0,0.08);
+}
+
+::-webkit-scrollbar { width: 0; }
