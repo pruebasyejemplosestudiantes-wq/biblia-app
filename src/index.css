@@ -81,6 +81,7 @@ input, textarea { font-family:var(--font-sans); }
    TABLET / DESKTOP  ≥ 768px
    =========================== */
 @media (min-width: 768px) {
+  .mobile-user-bar { display: none !important; }
 
   #root {
     max-width: 100%;

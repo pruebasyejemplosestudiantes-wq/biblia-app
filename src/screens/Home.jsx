@@ -3,7 +3,7 @@ import { DAILY_VERSES, DEVOTIONALS } from '../data/bible'
 
 const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
 
-export default function Home({ study, onNavigate }) {
+export default function Home({ study, onNavigate, auth, onLogout }) {
   const today = DAYS[new Date().getDay()]
   const devIdx = DEVOTIONALS.findIndex(d => d.date === today)
   const devotional = DEVOTIONALS[devIdx >= 0 ? devIdx : 0]
@@ -22,6 +22,17 @@ export default function Home({ study, onNavigate }) {
       }}>
         <div style={{ position:'absolute', top:'-20px', right:'-20px', width:'160px', height:'160px', borderRadius:'50%', background:'rgba(181,86,106,0.06)', pointerEvents:'none' }} />
         <div style={{ position:'absolute', bottom:'-40px', left:'10%', width:'120px', height:'120px', borderRadius:'50%', background:'rgba(123,94,167,0.05)', pointerEvents:'none' }} />
+        {/* Mobile: user info + logout (sidebar handles desktop) */}
+        {auth && (
+          <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'16px' }} className="mobile-user-bar">
+            <span style={{ fontSize:'0.78rem', color:'var(--text-muted)', fontWeight:500 }}>
+              👤 {auth.email}
+            </span>
+            <button onClick={onLogout} style={{ fontSize:'0.75rem', color:'var(--text-muted)', padding:'4px 10px', borderRadius:'100px', border:'1px solid var(--border)', background:'rgba(255,255,255,0.7)', cursor:'pointer' }}>
+              Sign out
+            </button>
+          </div>
+        )}
         <p style={{ fontSize:'0.78rem', fontWeight:600, letterSpacing:'1.5px', textTransform:'uppercase', color:'var(--rose)', marginBottom:'6px' }}>
           {new Date().toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' })}
         </p>

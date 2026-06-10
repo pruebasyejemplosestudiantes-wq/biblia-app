@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import { useStudy } from './hooks/useStudy'
+import { useAuth  } from './hooks/useAuth'
 import Home    from './screens/Home'
 import Bible   from './screens/Bible'
 import Plans   from './screens/Plans'
 import Library from './screens/Library'
 import Quiz    from './screens/Quiz'
+import Login   from './screens/Login'
 
 const NAV = [
   { id:'home',    icon:'🏠', label:'Home'    },
@@ -15,6 +17,7 @@ const NAV = [
 ]
 
 export default function App() {
+  const { auth, isLoggedIn, sending, verifying, error, setError, sendOTP, verifyOTP, logout } = useAuth()
   const [screen, setScreen] = useState('home')
   const studyHook = useStudy()
   const {
@@ -30,6 +33,21 @@ export default function App() {
     isBookmarked, isHighlighted, getNote,
   }
 
+  /* ── Not logged in → show Login ── */
+  if (!isLoggedIn) {
+    return (
+      <Login
+        onSendOTP={sendOTP}
+        onVerifyOTP={verifyOTP}
+        sending={sending}
+        verifying={verifying}
+        error={error}
+        setError={setError}
+      />
+    )
+  }
+
+  /* ── Logged in → main app ── */
   return (
     <div className="app-shell">
 
@@ -52,11 +70,27 @@ export default function App() {
             <span>{item.label}</span>
           </button>
         ))}
+
+        {/* User + logout at bottom of sidebar */}
+        <div style={{ marginTop:'auto', paddingTop:'20px', borderTop:'1px solid var(--border)' }}>
+          <div style={{ padding:'10px 14px', borderRadius:'12px', background:'var(--bg-elevated)', marginBottom:'6px' }}>
+            <p style={{ fontSize:'0.7rem', color:'var(--text-muted)', marginBottom:'2px' }}>Signed in as</p>
+            <p style={{ fontSize:'0.8rem', fontWeight:600, color:'var(--text)', wordBreak:'break-all' }}>{auth.email}</p>
+          </div>
+          <button
+            onClick={logout}
+            className="nav-side-item"
+            style={{ color:'var(--text-muted)', fontSize:'0.85rem' }}
+          >
+            <span style={{ fontSize:'1rem' }}>🚪</span>
+            <span>Sign Out</span>
+          </button>
+        </div>
       </nav>
 
       {/* ── Main content ── */}
       <div className="app-content">
-        {screen === 'home'    && <Home    study={studyWithMethods} onNavigate={setScreen} />}
+        {screen === 'home'    && <Home    study={studyWithMethods} onNavigate={setScreen} auth={auth} onLogout={logout} />}
         {screen === 'bible'   && <Bible   study={studyWithMethods} onToggleBookmark={toggleBookmark} onToggleHighlight={toggleHighlight} onSaveNote={saveNote} onMarkRead={markChapterRead} />}
         {screen === 'plans'   && <Plans   study={studyWithMethods} onMarkDay={markDayComplete} />}
         {screen === 'library' && <Library
